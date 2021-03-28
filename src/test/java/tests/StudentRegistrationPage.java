@@ -14,40 +14,41 @@ public class StudentRegistrationPage {
         $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
     }
 
-    public void fillForm(String firstName, String lastName, String userEmail, String gender, String userNumber, String dayOfBirth, String monthOfBirth, String yearOfBirth, String subjectsInput1, String subjectsInput2, String hobby, String picture, String currentAddress, String state, String city) {
-        $("#firstName").setValue(firstName);
-        $("#lastName").setValue(lastName);
-        $("#userEmail").setValue(userEmail);
-        $(byText(gender)).click();
-        $("#userNumber").setValue(userNumber);
-        setBirthDate(dayOfBirth, monthOfBirth, yearOfBirth);
-        $("#subjectsInput").setValue(subjectsInput1).pressEnter();
-        $("#subjectsInput").setValue(subjectsInput2).pressEnter();
-        $(byText(hobby)).click();
-        $("#uploadPicture").uploadFromClasspath(picture);
-        $("#currentAddress").setValue(currentAddress);
-        $("#react-select-3-input").setValue(state).pressEnter();
-        $("#react-select-4-input").setValue(city).pressEnter();
+    public void fillForm(Student student) {
+        $("#firstName").setValue(student.getFirstName());
+        $("#lastName").setValue(student.getLastName());
+        $("#userEmail").setValue(student.getUserEmail());
+        $(byText(student.getGender())).click();
+        $("#userNumber").setValue(student.getUserNumber());
+        setBirthDate(student.getDayOfBirth(), student.getMonthOfBirth(), student.getYearOfBirth());
+        student.getSubjects().forEach(x -> {
+            $("#subjectsInput").setValue(x).pressEnter();
+        });
+        $(byText(student.getHobby())).click();
+        $("#uploadPicture").uploadFromClasspath(student.getPicture());
+        $("#currentAddress").setValue(student.getCurrentAddress());
+        $("#react-select-3-input").setValue(student.getState()).pressEnter();
+        $("#react-select-4-input").setValue(student.getCity()).pressEnter();
         $("#submit").click();
     }
 
-    public void setBirthDate(String dayOfBirth,String monthOfBirth, String yearOfBirth) {
+    public void setBirthDate(String dayOfBirth, String monthOfBirth, String yearOfBirth) {
         $(byId("dateOfBirthInput")).click();
         $(".react-datepicker__month-select").selectOptionContainingText(monthOfBirth);
         $(".react-datepicker__year-select").selectOptionByValue(yearOfBirth);
         $(".react-datepicker__day--0" + dayOfBirth).click();
     }
 
-    public void checkForm (String firstName, String lastName, String userEmail, String gender, String userNumber, String dayOfBirth, String monthOfBirth, String yearOfBirth, String subjectsInput1, String subjectsInput2, String hobby, String picture, String currentAddress, String state, String city) {
-        $(".table-responsive").shouldHave(text("Student Name " + firstName + " " + lastName),
-                text("Student Email " + userEmail),
-                text("Gender " + gender),
-                text("Mobile " + userNumber),
-                text("Date of Birth " + dayOfBirth + " " + monthOfBirth + "," + yearOfBirth),
-                text("Subjects " +  subjectsInput1 + ", " + subjectsInput2),
-                text("Hobbies " + hobby),
-                text("Picture " + picture),
-                text("Address " +  currentAddress),
-                text("State and City " + state + " " + city));
+    public void checkForm(Student student) {
+        $(".table-responsive").shouldHave(text("Student Name " + student.getFirstName() + " " + student.getLastName()),
+                text("Student Email " + student.getUserEmail()),
+                text("Gender " + student.getGender()),
+                text("Mobile " + student.getUserNumber()),
+                text("Date of Birth " + student.getDayOfBirth() + " " + student.getMonthOfBirth() + "," + student.getYearOfBirth()),
+                text("Subjects " + student.getSubjects().get(0) + ", " + student.getSubjects().get(1)),
+                text("Hobbies " + student.getHobby()),
+                text("Picture " + student.getPicture()),
+                text("Address " + student.getCurrentAddress()),
+                text("State and City " + student.getState() + " " + student.getCity()));
     }
 }
